@@ -41,4 +41,5 @@ func InsertLogin(login model.Login) error {
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
+	return nil
 }
