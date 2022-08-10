@@ -21,6 +21,17 @@ var loginRoutes = []Route{
 		Handler:     controller.Login,
 		URI:         "/login",
 		RequireAuth: false,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.POST(uri, handler)
+		},
+	},
+	{
+		Handler:     controller.Register,
+		URI:         "/register",
+		RequireAuth: false,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.POST(uri, handler)
+		},
 	},
 }
 
