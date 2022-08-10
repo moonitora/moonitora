@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(100),
     ra VARCHAR(6),
-    curso INTEGER
+    curso INTEGER,
+    adm INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS monitorias (

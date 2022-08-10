@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/security"
@@ -33,5 +34,27 @@ func InsertLogin(login model.Login) error {
 	if err := tx2.Commit(); err != nil {
 		return err
 	}
+	return nil
+}
+
+func DownloadMonitores(departamento int, monitores *[]model.Monitor) error {
+	db := database.GrabDB()
+
+	if err := db.Select(&monitores, "SELECT * FROM usuarios WHERE curso=$1 AND adm=0", departamento); err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("nenhum monitor encontrado")
+		}
+		return err
+	}
+	return nil
+}
+
+func DownloadHorario(monitor *model.MonitorComHorarios) error {
+
+	return nil
+}
+
+func DownloadMonitorComHorarios(horarios *model.MonitorComHorarios) error {
+
 	return nil
 }

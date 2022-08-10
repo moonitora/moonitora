@@ -6,6 +6,7 @@ import (
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
 	"net/http"
+	"strconv"
 )
 
 type IncomingUser struct {
@@ -16,6 +17,26 @@ type IncomingUser struct {
 type Response struct {
 	JWT     string        `json:"jwt"`
 	Monitor model.Monitor `json:"monitor"`
+}
+
+func FetchMonitores(c *gin.Context) error {
+	dept, ok := c.GetQuery("departamento")
+	if !ok {
+		return nil
+	}
+
+	val, err := strconv.Atoi(dept)
+	if err != nil {
+		return err
+	}
+
+	var monitores []model.Monitor
+	if err := repository.DownloadMonitores(val, &monitores); err != nil {
+		return err
+	}
+
+	c.JSON(http.StatusOK, monitores)
+	return nil
 }
 
 func Register(c *gin.Context) error {

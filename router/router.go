@@ -15,7 +15,7 @@ type Route struct {
 	AssignFunction util.AssignFunction
 }
 
-var loginRoutes = []Route{
+var routes = []Route{
 	{
 		Handler:     controller.Login,
 		URI:         "/login",
@@ -27,16 +27,24 @@ var loginRoutes = []Route{
 	{
 		Handler:     controller.Register,
 		URI:         "/register",
-		RequireAuth: false,
+		RequireAuth: true,
 		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
 			e.POST(uri, handler)
+		},
+	},
+	{
+		Handler:     controller.FetchMonitores,
+		URI:         "/monitores",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.GET(uri, handler)
 		},
 	},
 }
 
 func Setup(e *gin.Engine) *gin.Engine {
 	var routes []Route
-	routes = append(routes, loginRoutes...)
+	routes = append(routes, routes...)
 	for _, x := range routes {
 		if x.RequireAuth {
 			Assign(x.AssignFunction, middleware.AbortOnError(middleware.Authorize(x.Handler)), x.URI, e)
