@@ -4,17 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/controller"
 	"github.com/victorbetoni/moonitora/middleware"
+	"github.com/victorbetoni/moonitora/util"
 	"net/http"
 )
 
-type HandleFuncError func(c *gin.Context) error
-type AssignFunction func(e *gin.Engine, handler gin.HandlerFunc, uri string)
-
 type Route struct {
 	RequireAuth    bool
-	Handler        HandleFuncError
+	Handler        util.HandleFuncError
 	URI            string
-	AssignFunction AssignFunction
+	AssignFunction util.AssignFunction
 }
 
 var loginRoutes = []Route{
@@ -53,7 +51,7 @@ func Setup(e *gin.Engine) *gin.Engine {
 	return nil
 }
 
-func Assign(assign AssignFunction, handler HandleFuncError, uri string, router *gin.Engine) {
+func Assign(assign util.AssignFunction, handler util.HandleFuncError, uri string, router *gin.Engine) {
 	assign(router, func(context *gin.Context) {
 		handler(context)
 	}, uri)
