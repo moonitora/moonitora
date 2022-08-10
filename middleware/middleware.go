@@ -23,7 +23,6 @@ func AbortOnError(handler util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) error {
 		if err := handler(c); err != nil {
 			c.Error(err)
-			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"status": false, "message": err.Error()})
 		}
 		return nil
 	}
