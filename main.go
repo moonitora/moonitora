@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/router"
 	"log"
@@ -16,6 +17,6 @@ func main() {
 		return
 	}
 
-	engine := router.Build()
+	engine := router.Setup(gin.Default())
 	engine.Run(fmt.Sprintf(":%s", port))
 }
