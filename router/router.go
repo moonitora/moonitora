@@ -47,7 +47,7 @@ func Setup(e *gin.Engine) *gin.Engine {
 	e.GET("/", func(context *gin.Context) {
 		context.String(http.StatusOK, "Pong")
 	})
-	return nil
+	return e
 }
 
 func Assign(assign util.AssignFunction, handler util.HandleFuncError, uri string, router *gin.Engine) {
