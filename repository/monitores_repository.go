@@ -17,8 +17,8 @@ func InsertMonitor(monitor model.Monitor) error {
 	}
 
 	tx := db.MustBegin()
-	tx.MustExec(`INSERT INTO usuarios (email, nome, ra, departamento, curso) VALUES ($1,$2,$3,$4,$5)`,
-		monitor.Email, monitor.Nome, monitor.RA, monitor.Departamento, monitor.Curso)
+	tx.MustExec(`INSERT INTO usuarios (email, nome, ra, curso) VALUES ($1,$2,$4,$5)`,
+		monitor.Email, monitor.Nome, monitor.RA, monitor.Curso)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
