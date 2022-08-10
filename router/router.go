@@ -43,7 +43,6 @@ func Setup(e *gin.Engine) *gin.Engine {
 		} else {
 			Assign(x.AssignFunction, middleware.AbortOnError(x.Handler), x.URI, e)
 		}
-		Assign(x.AssignFunction, x.Handler, x.URI, e)
 	}
 	e.GET("/", func(context *gin.Context) {
 		context.String(http.StatusOK, "Pong")
