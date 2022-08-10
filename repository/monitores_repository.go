@@ -22,14 +22,6 @@ func InsertMonitor(monitor model.Monitor) error {
 	if err := tx.Commit(); err != nil {
 		return err
 	}
-
-	crypt, _ := security.Hash(password)
-	tx2 := db.MustBegin()
-	tx2.MustExec("INSERT INTO login VALUES ($1,$2)", user.Username, string(crypt))
-	if err := tx2.Commit(); err != nil {
-		return err
-	}
-
 	return nil
 }
 
