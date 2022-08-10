@@ -13,6 +13,7 @@ type Route struct {
 	Handler        util.HandleFuncError
 	URI            string
 	AssignFunction util.AssignFunction
+	AdminAction    bool
 }
 
 var routes = []Route{
@@ -23,6 +24,7 @@ var routes = []Route{
 		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
 			e.POST(uri, handler)
 		},
+		AdminAction: false,
 	},
 	{
 		Handler:     controller.Register,
@@ -31,6 +33,7 @@ var routes = []Route{
 		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
 			e.POST(uri, handler)
 		},
+		AdminAction: true,
 	},
 	{
 		Handler:     controller.FetchMonitores,
@@ -39,6 +42,7 @@ var routes = []Route{
 		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
 			e.GET(uri, handler)
 		},
+		AdminAction: false,
 	},
 }
 
@@ -47,7 +51,11 @@ func Setup(e *gin.Engine) *gin.Engine {
 	routes = append(routes, routes...)
 	for _, x := range routes {
 		if x.RequireAuth {
-			Assign(x.AssignFunction, middleware.AbortOnError(middleware.Authorize(x.Handler)), x.URI, e)
+			if x.AdminAction {
+				Assign(x.AssignFunction, middleware.AbortOnError(middleware.CheckAuthenticated(middleware.CheckAdministrator(x.Handler))), x.URI, e)
+			} else {
+				Assign(x.AssignFunction, middleware.AbortOnError(middleware.CheckAuthenticated(x.Handler)), x.URI, e)
+			}
 		} else {
 			Assign(x.AssignFunction, middleware.AbortOnError(x.Handler), x.URI, e)
 		}

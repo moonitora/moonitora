@@ -18,8 +18,8 @@ func InsertMonitor(monitor model.Monitor) error {
 	}
 
 	tx := db.MustBegin()
-	tx.MustExec(`INSERT INTO usuarios (email, nome, ra, curso) VALUES ($1,$2,$3,$4)`,
-		monitor.Email, monitor.Nome, monitor.RA, monitor.Curso)
+	tx.MustExec(`INSERT INTO usuarios (email, nome, ra, departamento, adm) VALUES ($1,$2,$3,$4,0)`,
+		monitor.Email, monitor.Nome, monitor.RA, monitor.Departamento)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
@@ -46,6 +46,19 @@ func DownloadMonitores(departamento int, monitores *[]model.Monitor) error {
 		}
 		return err
 	}
+	return nil
+}
+
+func DownloadMonitor(email string, monitor *model.Monitor) error {
+	db := database.GrabDB()
+
+	if err := db.Get(&monitor, "SELECT * FROM usuarios WHERE email=$1", email); err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("nenhum monitor encontrado")
+		}
+		return err
+	}
+
 	return nil
 }
 
