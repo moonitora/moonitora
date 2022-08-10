@@ -32,6 +32,6 @@ func Login(c *gin.Context) error {
 	}
 
 	token := authorization.GenerateToken(userLogin.Email)
-	c.JSON(http.StatusOK, gin.H{"status": false, "message": "Senha incorreta", "user": userLogin.Email, "jwt": token})
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Login efetuado com sucesso", "user": userLogin.Email, "jwt": token})
 	return nil
 }
