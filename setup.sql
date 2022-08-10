@@ -2,8 +2,10 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(100),
     ra VARCHAR(6),
-    curso INTEGER,
-    adm INTEGER
+    departamento INTEGER FOREIGN KEY,
+    adm INTEGER,
+
+    FOREIGN KEY (departamento) REFERENCES departamentos(id)
 );
 
 CREATE TABLE IF NOT EXISTS monitorias (
@@ -22,6 +24,11 @@ CREATE TABLE IF NOT EXISTS login (
     password VARCHAR(512),
 
     FOREIGN KEY (email) REFERENCES usuarios(email)
+);
+
+CREATE TABLE IF NOT EXISTS departamentos (
+    id INTEGER PRIMARY KEY,
+    title VARCHAR(64)
 )
 
 
