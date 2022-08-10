@@ -3,11 +3,11 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/authorization"
-	"github.com/victorbetoni/moonitora/router"
+	"github.com/victorbetoni/moonitora/util"
 	"net/http"
 )
 
-func Authorize(forward router.HandleFuncError) router.HandleFuncError {
+func Authorize(forward util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) error {
 		if _, err := authorization.ExtractUser(c); err != nil {
 			c.Error(err)
@@ -19,7 +19,7 @@ func Authorize(forward router.HandleFuncError) router.HandleFuncError {
 	}
 }
 
-func AbortOnError(handler router.HandleFuncError) router.HandleFuncError {
+func AbortOnError(handler util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) error {
 		if err := handler(c); err != nil {
 			c.Error(err)
