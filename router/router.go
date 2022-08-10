@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/controller"
 	"github.com/victorbetoni/moonitora/middleware"
+	"net/http"
 )
 
 type HandleFuncError func(c *gin.Context) error
@@ -46,7 +47,9 @@ func Setup(e *gin.Engine) *gin.Engine {
 		}
 		Assign(x.AssignFunction, x.Handler, x.URI, e)
 	}
-
+	e.GET("/", func(context *gin.Context) {
+		context.String(http.StatusOK, "Pong")
+	})
 	return nil
 }
 
