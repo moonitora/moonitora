@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-func GenerateToken(username string) string {
+func GenerateToken(email string) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"username":   username,
+		"email":      email,
 		"authorized": true,
 		"exp":        time.Now().Add(time.Hour * 24).Unix(),
 		"nbf":        time.Date(2022, 8, 8, 9, 0, 0, 0, time.UTC).Unix(),

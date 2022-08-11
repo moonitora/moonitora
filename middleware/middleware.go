@@ -12,7 +12,6 @@ import (
 func CheckAuthenticated(forward util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) error {
 		if _, err := authorization.ExtractUser(c); err != nil {
-			c.Error(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
 		}
 
@@ -24,9 +23,8 @@ func CheckAuthenticated(forward util.HandleFuncError) util.HandleFuncError {
 func CheckAdministrator(forward util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) error {
 		user := model.Monitor{}
-		var email string
-		if a, err := authorization.ExtractUser(c); err != nil {
-			email = a
+		email, err := authorization.ExtractUser(c)
+		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
 		}
 
@@ -37,7 +35,6 @@ func CheckAdministrator(forward util.HandleFuncError) util.HandleFuncError {
 		if user.Adm != 1 {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
 		}
-
 		forward(c)
 		return nil
 	}

@@ -1,3 +1,8 @@
+CREATE TABLE IF NOT EXISTS departamentos (
+                                             id INTEGER PRIMARY KEY,
+                                             title VARCHAR(64)
+    );
+
 CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(100),
@@ -25,10 +30,5 @@ CREATE TABLE IF NOT EXISTS login (
 
     FOREIGN KEY (email) REFERENCES usuarios(email)
 );
-
-CREATE TABLE IF NOT EXISTS departamentos (
-    id INTEGER PRIMARY KEY,
-    title VARCHAR(64)
-)
 
 
