@@ -8,7 +8,7 @@ import (
 func DownloadDepartamentos(depts *[]model.Departamento) error {
 	db := database.GrabDB()
 
-	if err := db.Select(&depts, "SELECT * FROM departamentos"); err != nil {
+	if err := db.Select(depts, "SELECT * FROM departamentos"); err != nil {
 		return err
 	}
 
