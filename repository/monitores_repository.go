@@ -40,7 +40,7 @@ func InsertLogin(login model.Login) error {
 func DownloadMonitores(departamento int, monitores *[]model.Monitor) error {
 	db := database.GrabDB()
 
-	if err := db.Select(monitores, "SELECT * FROM usuarios WHERE curso=$1 AND adm=0", departamento); err != nil {
+	if err := db.Select(monitores, "SELECT * FROM usuarios WHERE departamento=$1", departamento); err != nil {
 		if err == sql.ErrNoRows {
 			return errors.New("nenhum monitor encontrado")
 		}
