@@ -8,7 +8,7 @@ import (
 )
 
 func GetDepartamentos(c *gin.Context) error {
-	depts := []model.Departamento
+	var depts []model.Departamento
 	if err := repository.DownloadDepartamentos(&depts); err != nil {
 		return err
 	}
