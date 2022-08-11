@@ -47,9 +47,9 @@ var routes = []Route{
 }
 
 func Setup(e *gin.Engine) *gin.Engine {
-	var routes []Route
-	routes = append(routes, routes...)
-	for _, x := range routes {
+	var r []Route
+	r = append(r, routes...)
+	for _, x := range r {
 		if x.RequireAuth {
 			if x.AdminAction {
 				Assign(x.AssignFunction, middleware.AbortOnError(middleware.CheckAuthenticated(middleware.CheckAdministrator(x.Handler))), x.URI, e)
