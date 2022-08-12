@@ -4,7 +4,7 @@ type Monitor struct {
 	Nome         string `json:"nome" db:"nome"`
 	RA           string `json:"ra" db:"ra"`
 	Email        string `json:"email" db:"email"`
-	Departamento int    `json:"curso" db:"departamento"`
+	Departamento int    `json:"departamento" db:"departamento"`
 	Adm          int    `json:"adm" db:"adm"`
 }
 

@@ -31,4 +31,13 @@ CREATE TABLE IF NOT EXISTS login (
     FOREIGN KEY (email) REFERENCES usuarios(email)
 );
 
+CREATE TABLE IF NOT EXISTS horarios (
+    monitor VARCHAR(50),
+    dia_da_semana INTEGER,
+    hora INTEGER,
+    minutos INTEGER,
+
+    FOREIGN KEY (monitor) REFERENCES usuarios(email)
+);
+
 
