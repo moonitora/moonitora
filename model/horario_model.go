@@ -1,6 +1,7 @@
 package model
 
 type Horario struct {
+	Monitor        string `json:"monitor" db:"monitor"`
 	DiaDaSemana    string `json:"dia_da_semana" db:"dia_da_semana"`
 	InicioHoras    string `json:"inicio_horas" db:"inicio_horas"`
 	InicioMinutos  string `json:"inicio_minutos" db:"inicio_minutos"`
