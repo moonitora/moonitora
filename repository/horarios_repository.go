@@ -24,3 +24,15 @@ func DownloadHorario(id string, horario *model.Horario) error {
 
 	return nil
 }
+
+func InsertHorario(horario model.Horario) error {
+	db := database.GrabDB()
+	tx := db.MustBegin()
+
+	tx.MustExec("INSERT INTO horarios VALUES ($1,$2,$3,$4,$5,$6,$7)", horario.Id, horario.Monitor, horario.DiaDaSemana, horario.InicioHoras, horario.InicioMinutos, horario.TerminoHoras, horario.TerminoMinutos)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
