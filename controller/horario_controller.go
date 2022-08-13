@@ -8,17 +8,17 @@ import (
 	"net/http"
 )
 
-func FetchHorarios(c *gin.Context) error {
+func FetchHorarios(c *gin.Context) (int, error) {
 	monitor, ok := c.GetQuery("monitor")
 	if !ok {
-		return errors.New("especifique um monitor")
+		return http.StatusBadRequest, errors.New("especifique um monitor")
 	}
 
 	var horarios []model.Horario
 	if err := repository.DownloadHorarios(monitor, &horarios); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, horarios)
-	return nil
+	return 0, nil
 }

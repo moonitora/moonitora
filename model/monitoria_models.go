@@ -1,10 +1,13 @@
 package model
 
 type Monitoria struct {
-	Monitor  Monitor `json:"monitor" db:"monitor"`
-	Conteudo string  `json:"conteudo" db:"conteudo"`
-	Dia      int     `json:"dia" db:"dia"`
-	Mes      int     `json:"mes" db:"mes"`
-	Ano      int     `json:"ano" db:"ano"`
-	RAAluno  string  `json:"email_aluno" db:"email_aluno"`
+	Id           string `json:"id" db:"id"`
+	Monitor      string `json:"monitor" db:"monitor"`
+	Departamento int    `json:"departamento" db:"departamento"`
+	Conteudo     string `json:"conteudo" db:"conteudo"`
+	Disciplina   string `json:"disciplina" db:"disciplina"`
+	Horario      string `json:"horario" db:"horario"`
+	NomeAluno    string `json:"aluno_nome" db:"aluno_nome"`
+	RAAluno      string `json:"aluno_ra" db:"aluno_ra"`
+	Data         string `json:"data" db:"data"`
 }

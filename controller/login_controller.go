@@ -2,6 +2,7 @@ package controller
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/authorization"
 	"github.com/victorbetoni/moonitora/database"
@@ -10,28 +11,25 @@ import (
 	"net/http"
 )
 
-func Login(c *gin.Context) error {
+func Login(c *gin.Context) (int, error) {
 	loginInfo := model.Login{}
 	if err := c.BindJSON(&loginInfo); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request", "user": "", "jwt": ""})
-		return err
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	db := database.GrabDB()
 	var userLogin model.Login
 	if err := db.Get(&userLogin, "SELECT * FROM login WHERE email=$1", loginInfo.Email); err != nil {
 		if err == sql.ErrNoRows {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "Usuário não encontrado", "user": "", "jwt": ""})
-			return err
+			return http.StatusNotFound, errors.New("usuario nao encontrado")
 		}
 	}
 
 	if err := security.ComparePassword(userLogin.Password, loginInfo.Password); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "Senha incorreta", "user": "", "jwt": ""})
-		return err
+		return http.StatusUnauthorized, errors.New("senha incorreta")
 	}
 
 	token := authorization.GenerateToken(userLogin.Email)
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Login efetuado com sucesso", "user": userLogin.Email, "jwt": token})
-	return nil
+	return 0, nil
 }

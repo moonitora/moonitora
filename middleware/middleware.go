@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/authorization"
 	"github.com/victorbetoni/moonitora/model"
@@ -10,41 +11,41 @@ import (
 )
 
 func CheckAuthenticated(forward util.HandleFuncError) util.HandleFuncError {
-	return func(c *gin.Context) error {
+	return func(c *gin.Context) (int, error) {
 		if _, err := authorization.ExtractUser(c); err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+			return http.StatusUnauthorized, errors.New("invalid token")
 		}
 
 		forward(c)
-		return nil
+		return 0, nil
 	}
 }
 
 func CheckAdministrator(forward util.HandleFuncError) util.HandleFuncError {
-	return func(c *gin.Context) error {
+	return func(c *gin.Context) (int, error) {
 		user := model.Monitor{}
 		email, err := authorization.ExtractUser(c)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "invalid token"})
+			return http.StatusUnauthorized, errors.New("invalid token")
 		}
 
 		if err := repository.DownloadMonitor(email, &user); err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": err.Error()})
+			return http.StatusInternalServerError, err
 		}
 
 		if user.Adm != 1 {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": false, "message": "unauthorized"})
+			return http.StatusUnauthorized, errors.New("unauthorized")
 		}
 		forward(c)
-		return nil
+		return 0, nil
 	}
 }
 
 func AbortOnError(handler util.HandleFuncError) util.HandleFuncError {
-	return func(c *gin.Context) error {
-		if err := handler(c); err != nil {
-			c.Error(err)
+	return func(c *gin.Context) (int, error) {
+		if status, err := handler(c); err != nil {
+			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error()})
 		}
-		return nil
+		return 0, nil
 	}
 }

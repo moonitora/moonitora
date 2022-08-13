@@ -7,11 +7,11 @@ import (
 	"net/http"
 )
 
-func GetDepartamentos(c *gin.Context) error {
+func GetDepartamentos(c *gin.Context) (int, error) {
 	var depts []model.Departamento
 	if err := repository.DownloadDepartamentos(&depts); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 	c.JSON(http.StatusOK, depts)
-	return nil
+	return 0, nil
 }

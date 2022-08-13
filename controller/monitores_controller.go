@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/authorization"
 	"github.com/victorbetoni/moonitora/model"
@@ -19,42 +20,42 @@ type Response struct {
 	Monitor model.Monitor `json:"monitor"`
 }
 
-func FetchMonitores(c *gin.Context) error {
+func FetchMonitores(c *gin.Context) (int, error) {
 	dept, ok := c.GetQuery("departamento")
 	if !ok {
-		return nil
+		return http.StatusBadRequest, errors.New("especifique um departamento")
 	}
 
 	val, err := strconv.Atoi(dept)
 	if err != nil {
-		return err
+		return http.StatusBadRequest, errors.New("departamento invalido")
 	}
 
 	var monitores []model.Monitor
 	if err := repository.DownloadMonitores(val, &monitores); err != nil {
-		return err
+		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, monitores)
-	return nil
+	return 0, nil
 }
 
-func Register(c *gin.Context) error {
+func Register(c *gin.Context) (int, error) {
 	incoming := IncomingUser{}
 	if err := c.BindJSON(&incoming); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": false, "message": "bad request", "user": "", "jwt": ""})
-		return err
+		return http.StatusBadRequest, errors.New("bad request")
 	}
 
 	if err := repository.InsertMonitor(incoming.Monitor); err != nil {
-		return err
+		return http.StatusBadRequest, err
 	}
 
 	if err := repository.InsertLogin(incoming.Login); err != nil {
-		return err
+		return http.StatusBadRequest, err
 	}
 
 	token := authorization.GenerateToken(incoming.Monitor.Email)
 	c.JSON(http.StatusOK, Response{JWT: token, Monitor: incoming.Monitor})
-	return nil
+
+	return 0, nil
 }
