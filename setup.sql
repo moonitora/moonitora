@@ -14,14 +14,19 @@ CREATE TABLE IF NOT EXISTS usuarios (
 );
 
 CREATE TABLE IF NOT EXISTS monitorias (
+    id VARCHAR(12) PRIMARY KEY,
     monitor VARCHAR(50),
-    conteudo VARCHAR(512),
-    dia INTEGER,
-    mes INTEGER,
-    ano INTEGER,
-    ra_aluno VARCHAR(6),
+    departamento INTEGER,
+    conteudo VARCHAR(128),
+    disciplina VARCHAR(128),
+    horario VARCHAR(24),
+    aluno_nome VARCHAR(128),
+    aluno_ra VARCHAR(6),
+    data VARCHAR(16),
 
-    FOREIGN KEY (monitor) REFERENCES usuarios(email)
+    FOREIGN KEY (monitor) REFERENCES usuarios(email),
+    FOREIGN KEY (departamento) REFERENCES departamentos(id),
+    FOREIGN KEY (horario) REFERENCES horarios(id)
 );
 
 CREATE TABLE IF NOT EXISTS login (

@@ -3,9 +3,11 @@ package controller
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -34,6 +36,8 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	if int(date.Weekday()) != horario.DiaDaSemana {
 		return http.StatusBadRequest, errors.New("dia da semana não corresponde")
 	}
+
+	monitoria.Id = strings.ReplaceAll(uuid.New().String(), "-", "")[:10]
 
 	return 0, nil
 }
