@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 CREATE TABLE IF NOT EXISTS monitorias (
     id VARCHAR(12) PRIMARY KEY,
+    marcada_por VARCHAR(50),
     monitor VARCHAR(50),
     departamento INTEGER,
     conteudo VARCHAR(128),

@@ -4,6 +4,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/victorbetoni/moonitora/authorization"
+	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
 	"net/http"
@@ -27,6 +29,9 @@ func PostMonitoria(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, errors.New(err.Error())
 	}
 
+	marcaPorEmail, _ := authorization.ExtractUser(c)
+	monitoria.MarcadaPor = marcaPorEmail
+
 	date, _ := time.Parse("2006-01-02", monitoria.Data)
 
 	if monitoria.Departamento != monitor.Departamento {
@@ -39,5 +44,15 @@ func PostMonitoria(c *gin.Context) (int, error) {
 
 	monitoria.Id = strings.ReplaceAll(uuid.New().String(), "-", "")[:10]
 
+	db := database.GrabDB()
+	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE horario=$1 AND monitor=$2 AND data=$3"); err == nil {
+		return http.StatusConflict, errors.New("dia e horario do monitor ja ocupado")
+	}
+
+	if err := repository.InsertMonitoria(monitoria); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, monitoria)
 	return 0, nil
 }

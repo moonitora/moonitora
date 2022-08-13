@@ -72,7 +72,7 @@ func ExtractUser(c *gin.Context) (string, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		username := fmt.Sprintf("%v", claims["username"])
+		username := fmt.Sprintf("%v", claims["email"])
 		return username, nil
 	}
 
