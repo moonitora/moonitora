@@ -62,11 +62,6 @@ func DownloadMonitor(email string, monitor *model.Monitor) error {
 	return nil
 }
 
-func DownloadHorario(monitor *model.MonitorComHorarios) error {
-
-	return nil
-}
-
 func DownloadMonitorComHorarios(horarios *model.MonitorComHorarios) error {
 
 	return nil

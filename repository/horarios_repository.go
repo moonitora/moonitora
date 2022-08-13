@@ -14,3 +14,13 @@ func DownloadHorarios(monitor string, horarios *[]model.Horario) error {
 
 	return nil
 }
+
+func DownloadHorario(id string, horario *model.Horario) error {
+	db := database.GrabDB()
+
+	if err := db.Get(horario, "SELECT * FROM horarios WHERE id=$1", id); err != nil {
+		return err
+	}
+
+	return nil
+}

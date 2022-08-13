@@ -32,10 +32,13 @@ CREATE TABLE IF NOT EXISTS login (
 );
 
 CREATE TABLE IF NOT EXISTS horarios (
+    id VARCHAR(24) PRIMARY KEY,
     monitor VARCHAR(50),
     dia_da_semana INTEGER,
-    hora INTEGER,
-    minutos INTEGER,
+    inicio_horas INTEGER,
+    inicio_minutos INTEGER,
+    termino_horas INTEGER,
+    termino_minutos INTEGER,
 
     FOREIGN KEY (monitor) REFERENCES usuarios(email)
 );
