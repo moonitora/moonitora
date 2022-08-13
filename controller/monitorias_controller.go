@@ -53,6 +53,6 @@ func PostMonitoria(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	c.JSON(http.StatusOK, monitoria)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitoria marcada com sucesso!", "body": monitoria})
 	return 0, nil
 }

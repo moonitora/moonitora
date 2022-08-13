@@ -15,11 +15,6 @@ type IncomingUser struct {
 	Login   model.Login   `json:"login"`
 }
 
-type Response struct {
-	JWT     string        `json:"jwt"`
-	Monitor model.Monitor `json:"monitor"`
-}
-
 func FetchMonitores(c *gin.Context) (int, error) {
 	dept, ok := c.GetQuery("departamento")
 	if !ok {
@@ -36,7 +31,7 @@ func FetchMonitores(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	c.JSON(http.StatusOK, monitores)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": monitores})
 	return 0, nil
 }
 
@@ -55,7 +50,7 @@ func Register(c *gin.Context) (int, error) {
 	}
 
 	token := authorization.GenerateToken(incoming.Monitor.Email)
-	c.JSON(http.StatusOK, Response{JWT: token, Monitor: incoming.Monitor})
 
+	c.JSON(http.StatusOK, gin.H{"jwt": token, "body": incoming.Monitor, "status": true, "message": "Login efetuado com sucesso"})
 	return 0, nil
 }

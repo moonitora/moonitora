@@ -52,6 +52,6 @@ func PostHorario(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	c.JSON(http.StatusOK, horario)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": horario})
 	return 0, nil
 }

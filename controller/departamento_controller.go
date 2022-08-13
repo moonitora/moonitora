@@ -12,6 +12,6 @@ func GetDepartamentos(c *gin.Context) (int, error) {
 	if err := repository.DownloadDepartamentos(&depts); err != nil {
 		return http.StatusInternalServerError, err
 	}
-	c.JSON(http.StatusOK, depts)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": depts})
 	return 0, nil
 }
