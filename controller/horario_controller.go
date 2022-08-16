@@ -22,7 +22,7 @@ func FetchHorarios(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	c.JSON(http.StatusOK, horarios)
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": horarios})
 	return 0, nil
 }
 
