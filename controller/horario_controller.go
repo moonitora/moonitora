@@ -57,7 +57,7 @@ func PostHorario(c *gin.Context) (int, error) {
 }
 
 func DeleteHorario(c *gin.Context) (int, error) {
-	value, ok := c.GetQuery("item")
+	value, ok := c.GetQuery("id")
 
 	if !ok {
 		return http.StatusBadRequest, errors.New("especifique um horário")
