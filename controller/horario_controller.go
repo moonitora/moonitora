@@ -33,7 +33,7 @@ func PostHorario(c *gin.Context) (int, error) {
 	}
 
 	if !(horario.InicioHoras >= 0 && horario.InicioHoras <= 23 && horario.InicioMinutos >= 0 && horario.InicioMinutos <= 59 && horario.TerminoHoras >= 0 && horario.TerminoHoras <= 23 && horario.TerminoMinutos >= 0 && horario.TerminoMinutos <= 59 && horario.DiaDaSemana >= 0 && horario.DiaDaSemana <= 6) {
-		return http.StatusBadRequest, errors.New("bad request")
+		return http.StatusBadRequest, errors.New("Especifique um horário válido")
 	}
 
 	user, _ := authorization.ExtractUser(c)
@@ -42,7 +42,7 @@ func PostHorario(c *gin.Context) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	if horario.Monitor != user && sender.Adm == 1 {
+	if horario.Monitor != user && sender.Adm != 1 {
 		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
 	}
 
@@ -53,5 +53,35 @@ func PostHorario(c *gin.Context) (int, error) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": horario})
+	return 0, nil
+}
+
+func DeleteHorario(c *gin.Context) (int, error) {
+	value, ok := c.GetQuery("item")
+
+	if !ok {
+		return http.StatusBadRequest, errors.New("especifique um horário")
+	}
+
+	user, _ := authorization.ExtractUser(c)
+	var sender model.Monitor
+	if err := repository.DownloadMonitor(user, &sender); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	var horario model.Horario
+	if err := repository.DownloadHorario(value, &horario); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if horario.Monitor != user && sender.Adm != 1 {
+		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
+	}
+
+	if err := repository.DeleteHorario(value); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Horário deletado", "body": ""})
 	return 0, nil
 }

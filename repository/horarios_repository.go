@@ -36,3 +36,15 @@ func InsertHorario(horario model.Horario) error {
 
 	return nil
 }
+
+func DeleteHorario(horario string) error {
+	db := database.GrabDB()
+	tx := db.MustBegin()
+
+	tx.MustExec("DELETE FROM horarios WHERE id=$1", horario)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}

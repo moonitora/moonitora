@@ -80,6 +80,15 @@ var routes = []Route{
 		},
 		AdminAction: false,
 	},
+	{
+		Handler:     controller.DeleteHorario,
+		URI:         "horario",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.DELETE(uri, handler)
+		},
+		AdminAction: false,
+	},
 }
 
 func Setup(e *gin.Engine) *gin.Engine {
