@@ -7,6 +7,7 @@ import (
 	"github.com/victorbetoni/moonitora/authorization"
 	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/model"
+	"github.com/victorbetoni/moonitora/repository"
 	"github.com/victorbetoni/moonitora/security"
 	"net/http"
 )
@@ -29,7 +30,12 @@ func Login(c *gin.Context) (int, error) {
 		return http.StatusUnauthorized, errors.New("senha incorreta")
 	}
 
+	var monitor model.Monitor
+	if err := repository.DownloadMonitor(userLogin.Email, &monitor); err != nil {
+		return http.StatusInternalServerError, errors.New("can't download monitor")
+	}
+
 	token := authorization.GenerateToken(userLogin.Email)
-	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Login efetuado com sucesso", "body": userLogin.Email, "jwt": token})
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Login efetuado com sucesso", "body": monitor, "jwt": token})
 	return 0, nil
 }
