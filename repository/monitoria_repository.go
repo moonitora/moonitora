@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+	"fmt"
 	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/model"
 )
@@ -42,5 +44,9 @@ func CheckDisponibility(horario string, data string) bool {
 
 	err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE data = $1 AND horario = $2 LIMIT 1", data, horario)
 
-	return err != nil
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return err != nil && err == sql.ErrNoRows
 }
