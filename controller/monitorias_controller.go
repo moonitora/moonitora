@@ -64,12 +64,27 @@ func FetchMonitorias(c *gin.Context) (int, error) {
 		return http.StatusBadRequest, errors.New("Especifique um monitor")
 	}
 
+	type MonitoriaComHorario struct {
+		Monitoria model.Monitoria `json:"monitoria`
+		Horario   model.Horario   `json:"horario"`
+	}
+
+	var monitoriasComHorario []MonitoriaComHorario
+
 	var monitorias []model.Monitoria
 	if err := repository.DownloadMonitorias(monitor, &monitorias); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": monitorias})
+	for _, monitoria := range monitorias {
+		var horario model.Horario
+		if err := repository.DownloadHorario(monitoria.Horario, &horario); err != nil {
+			return http.StatusInternalServerError, err
+		}
+		monitoriasComHorario = append(monitoriasComHorario, MonitoriaComHorario{Monitoria: monitoria, Horario: horario})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": monitoriasComHorario})
 	return 0, nil
 }
 
