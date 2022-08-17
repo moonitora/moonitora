@@ -44,7 +44,7 @@ func CheckAdministrator(forward util.HandleFuncError) util.HandleFuncError {
 func AbortOnError(handler util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) (int, error) {
 		if status, err := handler(c); err != nil {
-			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error()})
+			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error(), "body": ""})
 		}
 		return 0, nil
 	}
