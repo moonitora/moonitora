@@ -86,8 +86,9 @@ func CheckDisponibility(c *gin.Context) (int, error) {
 
 	db := database.GrabDB()
 	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE data=$1 AND horario=$2", req.Day, req.Horario); err == nil {
-		return http.StatusBadRequest, errors.New("Horário já reservado")
+		return http.StatusBadRequest, errors.New("Dia e horários já reservados")
 	}
 
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": ""})
 	return 0, nil
 }
