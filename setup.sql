@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS monitorias (
     aluno_nome VARCHAR(128),
     aluno_ra VARCHAR(6),
     data VARCHAR(16),
+    status INTEGER,
 
     FOREIGN KEY (monitor) REFERENCES usuarios(email),
     FOREIGN KEY (departamento) REFERENCES departamentos(id),
