@@ -68,7 +68,7 @@ func FetchMonitorias(c *gin.Context) (int, error) {
 	}
 
 	type MonitoriaComHorario struct {
-		Monitoria model.Monitoria `json:"monitoria`
+		Monitoria model.Monitoria `json:"monitoria"`
 		Horario   model.Horario   `json:"horario"`
 	}
 
