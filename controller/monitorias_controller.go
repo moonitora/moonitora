@@ -56,3 +56,22 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitoria marcada com sucesso!", "body": monitoria})
 	return 0, nil
 }
+
+func CheckDisponibility(c *gin.Context) (int, error) {
+	type Request struct {
+		Day     string `json:"dia"`
+		Horario string `json:"horario"`
+	}
+
+	var req Request
+	if err := c.BindJSON(&req); err != nil {
+		return http.StatusBadRequest, errors.New("bad request")
+	}
+
+	db := database.GrabDB()
+	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE data=$1 AND horario=$2", req.Day, req.Horario); err == nil {
+		return http.StatusBadRequest, errors.New("Horário já reservado")
+	}
+
+	return 0, nil
+}

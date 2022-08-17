@@ -29,7 +29,7 @@ func InsertMonitoria(monitoria model.Monitoria) error {
 	db := database.GrabDB()
 	tx := db.MustBegin()
 
-	tx.MustExec("INSERT INTO monitorias VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", monitoria.Id, monitoria.Monitor, monitoria.MarcadaPor, monitoria.Departamento, monitoria.Conteudo, monitoria.Disciplina, monitoria.Horario, monitoria.NomeAluno, monitoria.RAAluno, monitoria.Data)
+	tx.MustExec("INSERT INTO monitorias VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", monitoria.Id, monitoria.MarcadaPor, monitoria.Monitor, monitoria.Departamento, monitoria.Conteudo, monitoria.Disciplina, monitoria.Horario, monitoria.NomeAluno, monitoria.RAAluno, monitoria.Data)
 	if err := tx.Commit(); err != nil {
 		return err
 	}

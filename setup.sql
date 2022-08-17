@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(100),
     ra VARCHAR(6),
-    departamento INTEGER FOREIGN KEY,
+    departamento INTEGER,
     adm INTEGER,
 
     FOREIGN KEY (departamento) REFERENCES departamentos(id)
