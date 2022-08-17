@@ -39,7 +39,7 @@ func PostMonitoria(c *gin.Context) (int, error) {
 
 	date, _ := time.Parse("2006-01-02", monitoria.Data)
 	if date.Before(time.Now()) {
-		return http.StatusConflict, errors.New("Essa data já passou.")
+		return http.StatusBadRequest, errors.New("Essa data já passou.")
 	}
 
 	fmt.Println("4")
