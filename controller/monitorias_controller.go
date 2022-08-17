@@ -63,7 +63,7 @@ func PostMonitoria(c *gin.Context) (int, error) {
 
 	fmt.Println("999")
 
-	if !repository.CheckDisponibility(fmt.Sprintf("%q", monitoria.Horario), fmt.Sprintf("%q", monitoria.Data)) {
+	if !repository.CheckDisponibility(monitoria.Horario, monitoria.Data) {
 		return http.StatusBadRequest, errors.New("Dia e horario do monitor ja ocupado")
 	}
 
