@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -60,9 +59,7 @@ func PostMonitoria(c *gin.Context) (int, error) {
 
 	fmt.Println("seila")
 
-	db := database.GrabDB()
-	var foo model.Monitoria
-	if err := db.Get(&foo, "SELECT * FROM monitorias WHERE horario=$1 AND data=$3", fmt.Sprintf("%q", monitoria.Horario), fmt.Sprintf("%q", monitoria.Data)); err == nil || (err != nil && err != sql.ErrNoRows) {
+	if !repository.CheckDisponibility(fmt.Sprintf("%q", monitoria.Horario), fmt.Sprintf("%q", monitoria.Data)) {
 		return http.StatusBadRequest, errors.New("Dia e horario do monitor ja ocupado")
 	}
 

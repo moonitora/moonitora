@@ -36,3 +36,13 @@ func InsertMonitoria(monitoria model.Monitoria) error {
 
 	return nil
 }
+
+func CheckDisponibility(horario string, data string) bool {
+	db := database.GrabDB()
+
+	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE data = $1 AND horario = $2", data, horario); err != nil {
+		return true
+	}
+
+	return false
+}
