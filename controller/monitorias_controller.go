@@ -33,6 +33,9 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	monitoria.MarcadaPor = marcaPorEmail
 
 	date, _ := time.Parse("2006-01-02", monitoria.Data)
+	if date.Before(time.Now()) {
+		return http.StatusConflict, errors.New("Essa data já passou.")
+	}
 
 	if monitoria.Departamento != monitor.Departamento {
 		return http.StatusBadRequest, errors.New("departamento não corresponde")
@@ -47,7 +50,7 @@ func PostMonitoria(c *gin.Context) (int, error) {
 
 	db := database.GrabDB()
 	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE horario=$1 AND monitor=$2 AND data=$3"); err == nil {
-		return http.StatusConflict, errors.New("dia e horario do monitor ja ocupado")
+		return http.StatusConflict, errors.New("Dia e horario do monitor ja ocupado")
 	}
 
 	if err := repository.InsertMonitoria(monitoria); err != nil {
