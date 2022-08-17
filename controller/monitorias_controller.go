@@ -49,7 +49,7 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	monitoria.Status = 0
 
 	db := database.GrabDB()
-	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE horario=$1 AND monitor=$2 AND data=$3"); err == nil {
+	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE horario=$1 AND monitor=$2 AND data=$3", monitoria.Horario, monitoria.Monitor, monitoria.Data); err == nil {
 		return http.StatusConflict, errors.New("Dia e horario do monitor ja ocupado")
 	}
 
