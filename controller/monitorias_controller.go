@@ -59,7 +59,7 @@ func PostMonitoria(c *gin.Context) (int, error) {
 
 	fmt.Println("seila")
 
-	fmt.Println(repository.CheckDisponibility(fmt.Sprintf("%q", monitoria.Horario), fmt.Sprintf("%q", monitoria.Data)))
+	fmt.Println(repository.CheckDisponibility(monitoria.Horario, monitoria.Data))
 
 	fmt.Println("999")
 
