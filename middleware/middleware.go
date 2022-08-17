@@ -17,8 +17,7 @@ func CheckAuthenticated(forward util.HandleFuncError) util.HandleFuncError {
 			return http.StatusUnauthorized, errors.New("invalid token")
 		}
 
-		forward(c)
-		return 0, nil
+		return forward(c)
 	}
 }
 
@@ -37,8 +36,7 @@ func CheckAdministrator(forward util.HandleFuncError) util.HandleFuncError {
 		if user.Adm != 1 {
 			return http.StatusUnauthorized, errors.New("unauthorized")
 		}
-		forward(c)
-		return 0, nil
+		return forward(c)
 	}
 }
 
