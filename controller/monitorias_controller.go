@@ -57,6 +57,21 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	return 0, nil
 }
 
+func FetchMonitorias(c *gin.Context) (int, error) {
+	monitor, ok := c.GetQuery("monitor")
+	if !ok {
+		return http.StatusBadRequest, errors.New("Especifique um monitor")
+	}
+
+	var monitorias []model.Monitoria
+	if err := repository.DownloadMonitorias(monitor, &monitorias); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": monitorias})
+	return 0, nil
+}
+
 func CheckDisponibility(c *gin.Context) (int, error) {
 	type Request struct {
 		Day     string `json:"dia"`
