@@ -37,6 +37,8 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	marcaPorEmail, _ := authorization.ExtractUser(c)
 	monitoria.MarcadaPor = marcaPorEmail
 
+	fmt.Println("Mais debug")
+
 	date, _ := time.Parse("2006-01-02", monitoria.Data)
 	if date.Before(time.Now()) {
 		return http.StatusBadRequest, errors.New("Essa data já passou.")
