@@ -2,11 +2,9 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/victorbetoni/moonitora/authorization"
-	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
 	"net/http"
@@ -19,36 +17,28 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	if err := c.BindJSON(&monitoria); err != nil {
 		return http.StatusBadRequest, errors.New("bad request")
 	}
-	fmt.Println("1")
 
 	var horario model.Horario
 	if err := repository.DownloadHorario(monitoria.Horario, &horario); err != nil {
 		return http.StatusInternalServerError, errors.New(err.Error())
 	}
-	fmt.Println("2")
 
 	var monitor model.Monitor
 	if err := repository.DownloadMonitor(monitoria.Monitor, &monitor); err != nil {
 		return http.StatusInternalServerError, errors.New(err.Error())
 	}
-	fmt.Println("3")
 
 	marcaPorEmail, _ := authorization.ExtractUser(c)
 	monitoria.MarcadaPor = marcaPorEmail
-
-	fmt.Println("Mais debug")
 
 	date, _ := time.Parse("2006-01-02", monitoria.Data)
 	if date.Before(time.Now()) {
 		return http.StatusBadRequest, errors.New("Essa data já passou.")
 	}
 
-	fmt.Println("4")
-
 	if monitoria.Departamento != monitor.Departamento {
 		return http.StatusBadRequest, errors.New("departamento não corresponde")
 	}
-	fmt.Println("5")
 
 	if int(date.Weekday()) != horario.DiaDaSemana {
 		return http.StatusBadRequest, errors.New("dia da semana não corresponde")
@@ -57,23 +47,13 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	monitoria.Id = strings.ReplaceAll(uuid.New().String(), "-", "")[:10]
 	monitoria.Status = 0
 
-	fmt.Println("seila")
-
-	fmt.Println(repository.CheckDisponibility(monitoria.Horario, monitoria.Data))
-
-	fmt.Println("999")
-
 	if !repository.CheckDisponibility(monitoria.Horario, monitoria.Data) {
 		return http.StatusBadRequest, errors.New("Dia e horario do monitor ja ocupado")
 	}
 
-	fmt.Println("6")
-
 	if err := repository.InsertMonitoria(monitoria); err != nil {
 		return http.StatusInternalServerError, err
 	}
-	fmt.Println("7")
-
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitoria marcada com sucesso!", "body": monitoria})
 	return 0, nil
 }
@@ -110,7 +90,7 @@ func FetchMonitorias(c *gin.Context) (int, error) {
 
 func CheckDisponibility(c *gin.Context) (int, error) {
 	type Request struct {
-		Day     string `json:"dia"`
+		Data    string `json:"data"`
 		Horario string `json:"horario"`
 	}
 
@@ -119,9 +99,8 @@ func CheckDisponibility(c *gin.Context) (int, error) {
 		return http.StatusBadRequest, errors.New("bad request")
 	}
 
-	db := database.GrabDB()
-	if err := db.Get(&model.Monitoria{}, "SELECT * FROM monitorias WHERE data=$1 AND horario=$2", req.Day, req.Horario); err == nil {
-		return http.StatusBadRequest, errors.New("Dia e horários já reservados")
+	if !repository.CheckDisponibility(req.Horario, req.Data) {
+		return http.StatusBadRequest, errors.New("Dia e horario do monitor ja ocupado")
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": ""})
