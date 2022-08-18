@@ -51,6 +51,6 @@ func Register(c *gin.Context) (int, error) {
 
 	token := authorization.GenerateToken(incoming.Monitor.Email)
 
-	c.JSON(http.StatusOK, gin.H{"jwt": token, "body": incoming.Monitor, "status": true, "message": "Login efetuado com sucesso"})
+	c.JSON(http.StatusOK, gin.H{"jwt": token, "body": incoming.Monitor, "status": true, "message": "Usuário cadastrado com sucesso"})
 	return 0, nil
 }
