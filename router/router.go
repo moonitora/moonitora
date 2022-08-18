@@ -103,7 +103,7 @@ var routes = []Route{
 		URI:         "/checkdisponibility",
 		RequireAuth: true,
 		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
-			e.GET(uri, handler)
+			e.POST(uri, handler)
 		},
 		AdminAction: false,
 	},
