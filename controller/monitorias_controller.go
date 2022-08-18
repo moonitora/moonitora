@@ -106,3 +106,118 @@ func CheckDisponibility(c *gin.Context) (int, error) {
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "", "body": ""})
 	return 0, nil
 }
+
+func ConfirmMonitoria(c *gin.Context) (int, error) {
+	value, ok := c.GetQuery("monitoria")
+	if !ok {
+		return http.StatusBadRequest, errors.New("Informe uma monitoria para confirmar")
+	}
+
+	user, _ := authorization.ExtractUser(c)
+
+	var sender model.Monitor
+	if err := repository.DownloadMonitor(user, &sender); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	var monitoria model.Monitoria
+	if err := repository.DownloadMonitoria(value, &monitoria); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if user != monitoria.Monitor && sender.Adm != 1 {
+		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
+	}
+
+	switch monitoria.Status {
+	case 1:
+		return http.StatusConflict, errors.New("Essa monitoria já esta confirmada")
+	case 2:
+		return http.StatusConflict, errors.New("Essa monitoria já foi concluida")
+	case 3:
+		return http.StatusConflict, errors.New("Essa monitoria já foi cancelada")
+	}
+
+	if err := repository.SetStatus(monitoria.Id, 1); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitoria confirmada com sucesso", "body": ""})
+	return 0, nil
+}
+
+func ConcludeMonitoria(c *gin.Context) (int, error) {
+	value, ok := c.GetQuery("monitoria")
+	if !ok {
+		return http.StatusBadRequest, errors.New("Informe uma monitoria para confirmar")
+	}
+
+	user, _ := authorization.ExtractUser(c)
+
+	var sender model.Monitor
+	if err := repository.DownloadMonitor(user, &sender); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	var monitoria model.Monitoria
+	if err := repository.DownloadMonitoria(value, &monitoria); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if user != monitoria.Monitor && sender.Adm != 1 {
+		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
+	}
+
+	switch monitoria.Status {
+	case 1:
+		return http.StatusConflict, errors.New("Essa monitoria já esta confirmada")
+	case 2:
+		return http.StatusConflict, errors.New("Essa monitoria já foi concluida")
+	case 3:
+		return http.StatusConflict, errors.New("Essa monitoria já foi cancelada")
+	}
+
+	if err := repository.SetStatus(monitoria.Id, 1); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitoria concluida com sucesso", "body": ""})
+	return 0, nil
+}
+
+func CancelMonitoria(c *gin.Context) (int, error) {
+	value, ok := c.GetQuery("monitoria")
+	if !ok {
+		return http.StatusBadRequest, errors.New("Informe uma monitoria para confirmar")
+	}
+
+	user, _ := authorization.ExtractUser(c)
+
+	var sender model.Monitor
+	if err := repository.DownloadMonitor(user, &sender); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	var monitoria model.Monitoria
+	if err := repository.DownloadMonitoria(value, &monitoria); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if user != monitoria.Monitor && sender.Adm != 1 {
+		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
+	}
+
+	switch monitoria.Status {
+	case 2:
+		return http.StatusConflict, errors.New("Essa monitoria já foi concluida")
+	case 3:
+		return http.StatusConflict, errors.New("Essa monitoria já foi cancelada")
+	}
+
+	if err := repository.SetStatus(monitoria.Id, 3); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "A monitoria foi cancelada e o aluno foi avisado por email.", "body": ""})
+	return 0, nil
+}

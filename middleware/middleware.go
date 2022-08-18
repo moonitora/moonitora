@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/victorbetoni/moonitora/authorization"
 	"github.com/victorbetoni/moonitora/model"
@@ -43,7 +42,6 @@ func CheckAdministrator(forward util.HandleFuncError) util.HandleFuncError {
 func AbortOnError(handler util.HandleFuncError) util.HandleFuncError {
 	return func(c *gin.Context) (int, error) {
 		if status, err := handler(c); err != nil {
-			fmt.Println("Caiu no abort")
 			c.AbortWithStatusJSON(status, gin.H{"status": false, "message": err.Error(), "body": ""})
 		}
 		return 0, nil

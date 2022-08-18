@@ -12,9 +12,12 @@ func InsertMonitor(monitor model.Monitor) error {
 	db := database.GrabDB()
 
 	var found model.Monitor
-	err := db.Get(&found, "SELECT * FROM usuarios WHERE email = $1", monitor.Email)
+	err := db.Get(&found, "SELECT * FROM usuarios WHERE email = $1 OR ra = $2", monitor.Email, monitor.RA)
 	if err != nil && err != sql.ErrNoRows {
 		return err
+	}
+	if err != nil {
+		return errors.New("Usuário com email ou RA ja registrado.")
 	}
 
 	tx := db.MustBegin()

@@ -45,3 +45,24 @@ func CheckDisponibility(horario string, data string) bool {
 
 	return err != nil && err == sql.ErrNoRows
 }
+
+func SetStatus(monitoria string, status int) error {
+	db := database.GrabDB()
+	tx := db.MustBegin()
+
+	tx.MustExec("UPDATE FROM monitorias SET status=$1 WHERE id=$3", status, monitoria)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DownloadMonitoriasWithStatus(monitor string, status int, monitorias *[]model.Monitoria) error {
+	db := database.GrabDB()
+	if err := db.Select(monitorias, "SELECT * FROM monitorias WHERE monitor=$1 AND status=$2", monitor, status); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -107,6 +107,33 @@ var routes = []Route{
 		},
 		AdminAction: false,
 	},
+	{
+		Handler:     controller.CancelMonitoria,
+		URI:         "/monitoria/cancel",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.GET(uri, handler)
+		},
+		AdminAction: false,
+	},
+	{
+		Handler:     controller.ConfirmMonitoria,
+		URI:         "/monitoria/confirm",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.GET(uri, handler)
+		},
+		AdminAction: false,
+	},
+	{
+		Handler:     controller.ConcludeMonitoria,
+		URI:         "/monitoria/conclude",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.GET(uri, handler)
+		},
+		AdminAction: false,
+	},
 }
 
 func Setup(e *gin.Engine) *gin.Engine {
