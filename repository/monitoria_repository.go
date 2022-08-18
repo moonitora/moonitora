@@ -50,7 +50,7 @@ func SetStatus(monitoria string, status int) error {
 	db := database.GrabDB()
 	tx := db.MustBegin()
 
-	tx.MustExec("UPDATE monitorias SET status=$1 WHERE id=$3", status, monitoria)
+	tx.MustExec("UPDATE monitorias SET status=$1 WHERE id=$2", status, monitoria)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
