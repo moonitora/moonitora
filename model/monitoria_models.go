@@ -12,4 +12,5 @@ type Monitoria struct {
 	RAAluno      string `json:"aluno_ra" db:"aluno_ra"`
 	Data         string `json:"data" db:"data"`
 	Status       int    `json:"status" db:"status"`
+	Sala         string `json:"sala" db:"sala"`
 }
