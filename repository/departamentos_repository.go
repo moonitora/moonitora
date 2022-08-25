@@ -50,7 +50,7 @@ func DeleteDepartamento(id string) error {
 	}
 
 	tx = db.MustBegin()
-	tx.MustExec("DELETE FROM departamentos WHERE id=$1", id)
+	tx.MustExec("DELETE FROM departamentos WHERE uid=$1", id)
 	if err := tx.Commit(); err != nil {
 		return err
 	}
