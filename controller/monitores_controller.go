@@ -7,7 +7,6 @@ import (
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
 	"net/http"
-	"strconv"
 )
 
 type IncomingUser struct {
@@ -19,11 +18,6 @@ func FetchMonitores(c *gin.Context) (int, error) {
 	dept, ok := c.GetQuery("departamento")
 	if !ok {
 		return http.StatusBadRequest, errors.New("especifique um departamento")
-	}
-
-	val, err := strconv.Atoi(dept)
-	if err != nil {
-		return http.StatusBadRequest, errors.New("departamento invalido")
 	}
 
 	var monitores []model.Monitor
