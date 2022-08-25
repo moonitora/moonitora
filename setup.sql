@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS departamentos (
-                                             id INTEGER PRIMARY KEY,
+                                             id VARCHAR(12) PRIMARY KEY,
                                              title VARCHAR(64)
     );
 

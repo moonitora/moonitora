@@ -134,6 +134,15 @@ var routes = []Route{
 		},
 		AdminAction: false,
 	},
+	{
+		Handler:     controller.PostDepartamento,
+		URI:         "/departamento",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.POST(uri, handler)
+		},
+		AdminAction: true,
+	},
 }
 
 func Setup(e *gin.Engine) *gin.Engine {
