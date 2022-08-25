@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/victorbetoni/moonitora/authorization"
+	"github.com/victorbetoni/moonitora/email"
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
 	"net/http"
@@ -52,6 +53,9 @@ func PostMonitoria(c *gin.Context) (int, error) {
 	}
 
 	if err := repository.InsertMonitoria(monitoria); err != nil {
+		return http.StatusInternalServerError, err
+	}
+	if err := email.NotifyMonitor(monitoria.Monitor, monitoria); err != nil {
 		return http.StatusInternalServerError, err
 	}
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitoria marcada com sucesso!", "body": monitoria})
