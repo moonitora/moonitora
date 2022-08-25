@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/victorbetoni/moonitora/authorization"
 	"github.com/victorbetoni/moonitora/database"
 	"github.com/victorbetoni/moonitora/model"
 	"github.com/victorbetoni/moonitora/repository"
@@ -88,21 +87,25 @@ func PostDepartamento(c *gin.Context) (int, error) {
 		return http.StatusBadRequest, errors.New("Especifique um nome para o departamento")
 	}
 
-	user, _ := authorization.ExtractUser(c)
-	var sender model.Monitor
-	if err := repository.DownloadMonitor(user, &sender); err != nil {
-		return http.StatusInternalServerError, err
-	}
-
-	if sender.Adm != 1 {
-		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
-	}
-
 	departamento.Id = strings.ReplaceAll(uuid.New().String(), "-", "")[:10]
 	if err := repository.InsertDepartamento(departamento); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Departamento adicionado com sucesso", "body": ""})
+	return 0, nil
+}
+
+func DeleteDepartamento(c *gin.Context) (int, error) {
+	departamento, ok := c.GetQuery("departamento")
+	if !ok {
+		return http.StatusBadRequest, errors.New("Especifique um departamento")
+	}
+
+	if err := repository.DeleteDepartamento(departamento); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Departamento deletado com sucesso", "body": ""})
 	return 0, nil
 }

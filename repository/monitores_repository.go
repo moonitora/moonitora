@@ -40,7 +40,7 @@ func InsertLogin(login model.Login) error {
 	return nil
 }
 
-func DownloadMonitores(departamento int, monitores *[]model.Monitor) error {
+func DownloadMonitores(departamento string, monitores *[]model.Monitor) error {
 	db := database.GrabDB()
 
 	if err := db.Select(monitores, "SELECT * FROM usuarios WHERE departamento=$1", departamento); err != nil {

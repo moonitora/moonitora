@@ -4,7 +4,7 @@ type Monitoria struct {
 	Id           string `json:"id" db:"id"`
 	Monitor      string `json:"monitor" db:"monitor"`
 	MarcadaPor   string `json:"marcada_por" db:"marcada_por"`
-	Departamento int    `json:"departamento" db:"departamento"`
+	Departamento string `json:"departamento" db:"departamento"`
 	Conteudo     string `json:"conteudo" db:"conteudo"`
 	Disciplina   string `json:"disciplina" db:"disciplina"`
 	Horario      string `json:"horario" db:"horario"`

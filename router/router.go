@@ -143,6 +143,15 @@ var routes = []Route{
 		},
 		AdminAction: true,
 	},
+	{
+		Handler:     controller.DeleteDepartamento,
+		URI:         "/departamento",
+		RequireAuth: true,
+		AssignFunction: func(e *gin.Engine, handler gin.HandlerFunc, uri string) {
+			e.DELETE(uri, handler)
+		},
+		AdminAction: true,
+	},
 }
 
 func Setup(e *gin.Engine) *gin.Engine {

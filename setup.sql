@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     email VARCHAR(50) PRIMARY KEY,
     nome VARCHAR(100),
     ra VARCHAR(6),
-    departamento INTEGER,
+    departamento VARCHAR(12),
     adm INTEGER,
 
     FOREIGN KEY (departamento) REFERENCES departamentos(id)
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS monitorias (
     id VARCHAR(12) PRIMARY KEY,
     marcada_por VARCHAR(50),
     monitor VARCHAR(50),
-    departamento INTEGER,
+    departamento VARCHAR(12),
     conteudo VARCHAR(128),
     disciplina VARCHAR(128),
     horario VARCHAR(24),
