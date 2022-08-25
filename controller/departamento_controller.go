@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/victorbetoni/moonitora/database"
@@ -78,19 +79,26 @@ func GetDepartamentos(c *gin.Context) (int, error) {
 }
 
 func PostDepartamento(c *gin.Context) (int, error) {
+	fmt.Println("1")
 	var departamento model.Departamento
 	if err := c.BindJSON(&departamento); err != nil {
 		return http.StatusBadRequest, errors.New("bad request")
 	}
 
+	fmt.Println("2")
+
 	if departamento.Name == "" {
 		return http.StatusBadRequest, errors.New("Especifique um nome para o departamento")
 	}
+
+	fmt.Println("3")
 
 	departamento.Id = strings.ReplaceAll(uuid.New().String(), "-", "")[:10]
 	if err := repository.InsertDepartamento(departamento); err != nil {
 		return http.StatusInternalServerError, err
 	}
+
+	fmt.Println("4")
 
 	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Departamento adicionado com sucesso", "body": ""})
 	return 0, nil
