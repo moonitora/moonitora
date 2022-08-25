@@ -27,7 +27,7 @@ func FetchMonitores(c *gin.Context) (int, error) {
 	}
 
 	var monitores []model.Monitor
-	if err := repository.DownloadMonitores(val, &monitores); err != nil {
+	if err := repository.DownloadMonitores(dept, &monitores); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
