@@ -14,9 +14,10 @@ func NotifyMonitor(monitor string, monitoria model.Monitoria) error {
 	msg.SetHeader("Subject", "Monitoria marcada para você")
 	msg.SetBody("text/html", "<b>Uma nova monitoria foi marcada para você</b>")
 
-	fmt.Println(monitor)
-	fmt.Println(os.Getenv("APP_EMAIL_USER"))
-	fmt.Println(os.Getenv("APP_EMAIL_PASSWORD"))
+	fmt.Println("From: ", os.Getenv("APP_EMAIL"))
+	fmt.Println("Monitor:", monitor)
+	fmt.Println("user: ", os.Getenv("APP_EMAIL_USER"))
+	fmt.Println("password: ", os.Getenv("APP_EMAIL_PASSWORD"))
 
 	n := gomail.NewDialer("smtp.gmail.com", 587, os.Getenv("APP_EMAIL_USER"), os.Getenv("APP_EMAIL_PASSWORD"))
 
