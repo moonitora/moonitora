@@ -17,7 +17,7 @@ type IncomingUser struct {
 
 func FetchMonitores(c *gin.Context) (int, error) {
 	dept, ok := c.GetQuery("departamento")
-	deep, okDeep := c.GetQuery("deep")
+	_, okDeep := c.GetQuery("deep")
 	if !ok {
 		return http.StatusBadRequest, errors.New("especifique um departamento")
 	}
