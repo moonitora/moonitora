@@ -21,7 +21,7 @@ func InsertMonitor(monitor model.Monitor) error {
 	}
 
 	tx := db.MustBegin()
-	tx.MustExec(`INSERT INTO usuarios (email, nome, ra, departamento, adm) VALUES ($1,$2,$3,$4,0)`,
+	tx.MustExec(`INSERT INTO usuarios (email, nome, ra, departamento, ativado, adm) VALUES ($1,$2,$3,$4,1,0)`,
 		monitor.Email, monitor.Nome, monitor.RA, monitor.Departamento)
 	if err := tx.Commit(); err != nil {
 		return err
@@ -65,7 +65,14 @@ func DownloadMonitor(email string, monitor *model.Monitor) error {
 	return nil
 }
 
-func DownloadMonitorComHorarios(horarios *model.MonitorComHorarios) error {
+func DeleteMonitor(email string) error {
+	db := database.GrabDB()
+	tx := db.MustBegin()
+
+	tx.MustExec("UPDATE usuarios SET ativado=0 WHERE email=$1", email)
+	if err := tx.Commit(); err != nil {
+		return err
+	}
 
 	return nil
 }

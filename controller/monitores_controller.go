@@ -15,6 +15,31 @@ type IncomingUser struct {
 	Login   model.Login   `json:"login"`
 }
 
+func DeleteMonitor(c *gin.Context) (int, error) {
+	value, ok := c.GetQuery("email")
+
+	if !ok {
+		return http.StatusBadRequest, errors.New("especifique um monitor")
+	}
+
+	user, _ := authorization.ExtractUser(c)
+	var sender model.Monitor
+	if err := repository.DownloadMonitor(user, &sender); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	if sender.Adm != 1 {
+		return http.StatusUnauthorized, errors.New("Você não tem permissão para isso")
+	}
+
+	if err := repository.DeleteMonitor(value); err != nil {
+		return http.StatusInternalServerError, err
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": true, "message": "Monitor removido!", "body": ""})
+	return 0, nil
+}
+
 func FetchMonitores(c *gin.Context) (int, error) {
 	dept, ok := c.GetQuery("departamento")
 	_, okDeep := c.GetQuery("deep")
